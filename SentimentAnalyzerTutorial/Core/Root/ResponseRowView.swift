@@ -8,12 +8,27 @@
 import SwiftUI
 
 struct ResponseRowView: View {
-    let resource: Response
+    let response: Response
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        HStack {
+            Text(response.text)
+            
+            Spacer()
+            
+            Image(systemName: response.sentiment.icon)
+                .frame(width: 30, height: 30)
+                .foregroundStyle(.white)
+                .background {
+                    RoundedRectangle(cornerRadius: 8)
+                        .fill(response.sentiment.sentimentColor)
+                }
+        }
+        .padding()
+        .background(Color(.systemBackground))
+        .clipShape(RoundedRectangle(cornerRadius: 10))
     }
 }
 
 #Preview {
-    ResponseRowView(resource: Response(id: UUID().uuidString, text: Response.sampleResponse[0], score: 1.0))
+    ResponseRowView(response: Response(id: UUID().uuidString, text: Response.sampleResponse[0], score: 1.0))
 }

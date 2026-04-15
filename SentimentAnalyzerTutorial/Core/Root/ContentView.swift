@@ -8,7 +8,10 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State private var responseText: String = ""
+    @State private var responseText = ""
+    @State private var responses = [Response]()
+    @State private var scorer = Scorer()
+    
     var body: some View {
         NavigationStack {
             VStack {
@@ -17,8 +20,9 @@ struct ContentView: View {
                     
                     Text("Overview Section")
                     
-                    ForEach(0..<10) { Response in
-                        Text("Response")
+                    ForEach(responses) { response in
+                        ResponseRowView(response: response)
+                            .padding(.horizontal)
                     }
                 }
                 
@@ -28,23 +32,48 @@ struct ContentView: View {
                         text: $responseText,
                         axis: .vertical
                     )
-                    .padding()
-                    .padding(.leading, 8)
-                    .lineLimit(5)
+                    .padding(12)
+                    .padding(.leading, 4)
+                    .padding(.leading, 4)
                     .overlay {
                         RoundedRectangle(cornerRadius: 25)
                             .stroke(Color(.systemGray4), lineWidth: 1.0)
                     }
                     
                     Button("Done") {
-                        // Add response
+                        onDoneTapped()
                     }
                     .fontWeight(.semibold)
                 }
                 .padding()
                 .padding(.bottom)
             }
+            .background(Color(.systemGroupedBackground))
         }
+        .task {
+            for response in Response.sampleResponse {
+                saveResponse(response)
+            }
+        }
+    }
+}
+
+private extension ContentView {
+    func saveResponse(_ text: String, shouldInsert: Bool = false) {
+        let score = scorer.score(text)
+        let response = Response(id: UUID().uuidString, text: text, score: score)
+        
+        if shouldInsert {
+            responses.insert(response, at: 0)
+        } else {
+            responses.append(response)
+        }
+    }
+    
+    func onDoneTapped() {
+        guard !responseText.isEmpty else { return }
+        saveResponse(responseText, shouldInsert: true)
+        responseText = ""
     }
 }
 
