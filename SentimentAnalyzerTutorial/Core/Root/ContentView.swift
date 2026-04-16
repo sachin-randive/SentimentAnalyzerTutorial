@@ -46,7 +46,6 @@ struct ContentView: View {
                     .fontWeight(.semibold)
                 }
                 .padding()
-                .padding(.bottom)
             }
             .background(Color(.systemGroupedBackground))
         }
