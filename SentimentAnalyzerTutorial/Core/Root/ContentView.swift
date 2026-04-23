@@ -50,6 +50,8 @@ struct ContentView: View {
                 .padding()
             }
             .background(Color(.systemGroupedBackground))
+            .navigationTitle("The Future of AI")
+            .navigationBarTitleDisplayMode(.inline)
         }
         .task {
             for response in Response.sampleResponse {
